@@ -15,11 +15,21 @@ Just starting with Janet? See the official language introduction [here](https://
   - `Alt+Up/Down` to drag S-Exp forward/backward
   - "Slurp" (extend parentheses), "Barf" (shrink parentheses), and other PareEdit commands (see [this visual guide to ParEdit on the Calva website](https://calva.io/paredit/) for more info, most of which applies without modification to this extension too)
 - Language Server Protocol via embedded [Janet LSP](https://www.github.com/CFiggers/janet-lsp)
-  - Inline compiler error underlining (glitchy on Windows at the moment)
+  - Inline compiler error underlining
   - Function and macro autocomplete
   - On-hover symbol definitions
 
 More coming soon!
+
+# Usage
+
+## Janet LSP and `startup.janet`
+
+Janet LSP works by running a copy of the Janet runtime and flychecking (that is, compiling but not fully evaluating) the code in your active editor window using that runtime instance. This allows for on-hover documentation and compiler warnings to be provided by Janet itself.
+
+Sometimes, you may need to pre-load modules or modify the environment table in other ways in order for the LSP's runtime to correctly recognize the code in your editor. In such cases, you can create a `.janet-lsp/` directory in your project's root and add a `startup.janet` file to that folder. If such a startup script is detected, the LSP will fully execute it prior to initiating the startup handshake with your editor.
+
+The code in `startup.janet` is normal Janet source code that is executed by the server's runtime. **Don't put any code you don't completely trust in `startup.janet`.**
 
 # Contributing
 
