@@ -79,6 +79,18 @@ function getServerImage(): string {
     // );
 }
 
+function getDiscoverJpmTreeOpt(): string[] {
+    let discoverJpmTreeOpt: string[];
+
+    if (config.getConfig().dontDiscoverJpmTree){
+        discoverJpmTreeOpt = ["--dont-search-jpm-tree"];
+    } else {
+        discoverJpmTreeOpt = [];
+    }
+
+    return discoverJpmTreeOpt;
+}
+
 function getServerOptions(): ServerOptions {
     let options: ServerOptions;
 
@@ -91,7 +103,7 @@ function getServerOptions(): ServerOptions {
     } else {
         options = {
             command: "janet",
-            args: ["-i", getServerImage()],
+            args: ["-i", getServerImage()].concat(getDiscoverJpmTreeOpt()),
             transport: TransportKind.stdio
         };
     }
