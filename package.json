@@ -3,7 +3,7 @@
 	"displayName": "Janet++",
 	"description": "Expanded Janet language support for Visual Studio Code",
 	"icon": "images/icon_png_minimal_glow.png",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"author": "Caleb Figgers",
 	"publisher": "CalebFiggers",
 	"repository": {
@@ -56,7 +56,7 @@
 				"files.trimTrailingWhitespace": false,
 				"editor.matchBrackets": "never",
 				"editor.guides.indentation": false,
-				"editor.parameterHints.enabled": false,
+				"editor.parameterHints.enabled": true,
 				"editor.unicodeHighlight.allowedCharacters": {
 					" ": true,
 					"꞉": true
