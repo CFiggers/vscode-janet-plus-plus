@@ -271,6 +271,9 @@
           'eachk [[:inner 0]]
           'eachp [[:inner 0]]
           'distinct [[:inner 0]]
+          'for [[:inner 0]]
+          'prewalk [[:inner 0]]
+          'postwalk [[:inner 0]]
           'with-vars [[:block 1]]}))
 
 (defmulti ^:private indenter-fn
