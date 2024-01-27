@@ -274,7 +274,27 @@
           'for [[:inner 0]]
           'prewalk [[:inner 0]]
           'postwalk [[:inner 0]]
-          'with-vars [[:block 1]]}))
+          'with-vars [[:block 1]]
+          'compwhen [[:block 0]]
+          'coro [[:block 0]]
+          'defer [[:block 0]]
+          'edefer [[:block 0]]
+          'ev/do-thread [[:block 0]]
+          'ev/spawn [[:block 0]]
+          'ev/span-thread [[:block 0]]
+          'ev/with-deadline [[:block 0]]
+          'ffi/defbind [[:block 0]]
+          'fiber-fn [[:block 0]]
+          'forever [[:block 0]]
+          'forv [[:block 0]]
+          'generate [[:block 0]]
+          'label [[:block 0]]
+          'prompt [[:block 0]]
+          'protect [[:block 0]]
+          'repeat [[:block 0]]
+          'when-with [[:block 0]]
+          'with [[:block 0]]
+          'var [[:block 0]]}))
 
 (defmulti ^:private indenter-fn
   (fn [sym alias-map [type & args]] type))
