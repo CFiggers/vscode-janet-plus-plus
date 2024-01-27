@@ -14,6 +14,7 @@ import {
     TransportKind,
 } from "vscode-languageclient/node";
 import * as child_process from "child_process";
+import { type } from 'os';
 
 // export enum LspStatus {
 //     Stopped = 'Stopped',
@@ -93,11 +94,13 @@ function getDiscoverJpmTreeOpt(): string[] {
 
 function getServerOptions(): ServerOptions {
     let options: ServerOptions;
+    const lspConfig = config.getConfig().customJanetLspCommand;
 
-    if (config.getConfig().customJanetLspCommand) {
+    if (lspConfig) {
+        const parts = lspConfig.split(" ");
         options = {
-            command: config.getConfig().customJanetLspCommand[0],
-            args: config.getConfig().customJanetLspCommand.slice(1),
+            command: parts[0],
+            args: parts.slice(1),
             transport: TransportKind.stdio
         };
     } else {

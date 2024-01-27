@@ -5,6 +5,18 @@ import { EditableDocument } from '../../../cursor-doc/model';
 import * as paredit from '../../../cursor-doc/paredit';
 import { getConfig } from '../../../config';
 import * as util from '../../../utilities';
+import * as whenContexts from '../../../when-contexts';
+
+function isNewLineInComment(ch: string): boolean {
+  return (
+    ch === '\n' &&
+    whenContexts.lastContexts.includes('janet:cursorInComment') &&
+    !(
+      whenContexts.lastContexts.includes('janet:cursorBeforeComment') ||
+      whenContexts.lastContexts.includes('janet:cursorAfterComment')
+    )
+  );
+}
 
 export class FormatOnTypeEditProvider implements vscode.OnTypeFormattingEditProvider {
   async provideOnTypeFormattingEdits(
@@ -13,6 +25,9 @@ export class FormatOnTypeEditProvider implements vscode.OnTypeFormattingEditProv
     ch: string,
     _options
   ): Promise<vscode.TextEdit[] | undefined> {
+    if (isNewLineInComment(ch)) {
+      return undefined;
+    }
     let keyMap = vscode.workspace.getConfiguration().get('janet.paredit.defaultKeyMap');
     keyMap = String(keyMap).trim().toLowerCase();
     if ([')', ']', '}'].includes(ch)) {

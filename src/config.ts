@@ -166,7 +166,7 @@ function getConfig() {
     definitionProviderPriority: configOptions.get<string[]>('definitionProviderPriority'),
 
     // Janet LSP
-    customJanetLspCommand: lspOptions.get<string[]>('customJanetLspCommand', []),
+    customJanetLspCommand: lspOptions.get<string>('customJanetLspCommand'),
     dontDiscoverJpmTree: lspOptions.get<boolean>('dontDiscoverJpmTree'),
     enableLsp: lspOptions.get<boolean>('enableLsp')
   };

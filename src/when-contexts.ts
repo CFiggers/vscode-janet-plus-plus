@@ -3,7 +3,8 @@ import * as docMirror from './doc-mirror';
 import * as context from './cursor-doc/cursor-context';
 import * as util from './utilities';
 
-let lastContexts: context.CursorContext[] = [];
+export let lastContexts: context.CursorContext[] = [];
+export let currentContexts: context.CursorContext[] = [];
 
 function deepEqual(x: any, y: any): boolean {
   if (x == y) {
