@@ -159,18 +159,18 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		));
 	
-		context.subscriptions.push(vscode.commands.registerCommand(
-			'janet.formatFile',
-			() => {
+		// context.subscriptions.push(vscode.commands.registerCommand(
+		// 	'janet.formatFile',
+		// 	() => {
 				
-				getREPL(true).then(terminal => {
-					sendSource(terminal, "(import spork/fmt) (fmt/format-file \""+
-						vscode.window.activeTextEditor.document.uri.fsPath.replace(/\\/g, "/")
-					+"\")");
-					thenFocusTextEditor();
-				});
-			}
-		));
+		// 		getREPL(true).then(terminal => {
+		// 			sendSource(terminal, "(import spork/fmt) (fmt/format-file \""+
+		// 				vscode.window.activeTextEditor.document.uri.fsPath.replace(/\\/g, "/")
+		// 			+"\")");
+		// 			thenFocusTextEditor();
+		// 		});
+		// 	}
+		// ));
 	} else {
 		void vscode.window.showWarningMessage(
 			'The official Janet VS Code extension is detected. Features unique to the Janet++ extension should work fine, but you will not benefit from updated/improved versions of the official extension\'s functionality. You probably want to uninstall or disable the official extension.',

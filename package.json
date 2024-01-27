@@ -197,11 +197,6 @@
 				"enablement": "editorLangId == janet"
 			},
 			{
-				"command": "janet.formatFile",
-				"title": "Janet: Format file",
-				"enablement": "editorLangId == janet"
-			},
-			{
 				"command": "janet.continueComment",
 				"title": "Janet: Continue Comment (add a commented line below).",
 				"category": "Janet"
