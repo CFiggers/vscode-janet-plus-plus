@@ -195,15 +195,15 @@ function tryToGetDocument(
   }
 }
 
-// function getDocument(document: vscode.TextDocument | Record<string, never>): vscode.TextDocument {
-//   const doc = tryToGetDocument(document);
+export function getDocument(document: vscode.TextDocument | Record<string, never>): vscode.TextDocument {
+  const doc = tryToGetDocument(document);
 
-//   if (isUndefined(doc)) {
-//     throw new Error('Expected an activeTextEditor with a document!');
-//   }
+  if (isUndefined(doc)) {
+    throw new Error('Expected an activeTextEditor with a document!');
+  }
 
-//   return doc;
-// }
+  return doc;
+}
 
 // function getFileType(document: vscode.TextDocument | Record<string, never> | undefined) {
 //   const doc = tryToGetDocument(document);

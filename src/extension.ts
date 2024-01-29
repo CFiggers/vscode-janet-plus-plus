@@ -11,8 +11,10 @@ import * as whenContexts from './when-contexts';
 import * as edit from './edit';
 import annotations from './providers/annotations';
 // import * as util from './utilities';
+import * as evaluate from './evaluate';
 import * as state from './state';
 import status from './status';
+import { SelectionAndText } from './util/get-text';
 
 const windows: boolean = os.platform() == 'win32';
 
@@ -103,6 +105,39 @@ function setKeybindingsEnabledContext() {
 	);
 }
 
+function sendToREPL(
+	f: (editor: vscode.TextEditor) => SelectionAndText,
+	ignoreSelection: boolean
+){
+	const editor = vscode.window.activeTextEditor;
+	if (editor == null) return;
+	const terminal: vscode.Terminal = vscode.window.terminals.find(x => x.name === terminalName);
+	const newTerminal = (terminal) ? false : true;
+	getREPL(true).then(terminal => {
+		function send(terminal: vscode.Terminal, text: string) {
+			sendSource(terminal, text);
+			if (!newTerminal) {
+				thenFocusTextEditor();
+			}
+		}
+		
+		if ((editor.selection.isEmpty) || ignoreSelection) {
+			const selectionAndText = f(editor);
+			send(terminal, selectionAndText[1]);
+			annotations.decorateSelection(
+				selectionAndText[1],
+				selectionAndText[0],
+				editor,
+				editor.selection.active,
+				undefined,
+				annotations.AnnotationStatus.SUCCESS);
+		}
+			// vscode.commands.executeCommand('editor.action.selectToBracket').then(() => send(terminal));
+		else
+			send(terminal, editor.document.getText(editor.selection));
+	});
+}
+
 export function activate(context: vscode.ExtensionContext) {
 
 	console.log('Extension "vscode-janet" is activating.');
@@ -127,23 +162,14 @@ export function activate(context: vscode.ExtensionContext) {
 		context.subscriptions.push(vscode.commands.registerCommand(
 			'janet.eval',
 			() => {
-				const editor = vscode.window.activeTextEditor;
-				if (editor == null) return;
-				const terminal: vscode.Terminal = vscode.window.terminals.find(x => x.name === terminalName);
-				const newTerminal = (terminal) ? false : true;
-				getREPL(true).then(terminal => {
-					function send(terminal: vscode.Terminal) {
-						sendSource(terminal, editor.document.getText(editor.selection));
-						if (!newTerminal) {
-							thenFocusTextEditor();
-						}
-					}
-					
-					if (editor.selection.isEmpty)
-						vscode.commands.executeCommand('editor.action.selectToBracket').then(() => send(terminal));
-					else
-						send(terminal);
-				});
+				sendToREPL(evaluate._currentEnclosingFormText, false);
+			}
+		));
+	
+		context.subscriptions.push(vscode.commands.registerCommand(
+			'janet.evalTopLevel',
+			() => {
+				sendToREPL(evaluate._currentTopLevelFormText, true);
 			}
 		));
 
