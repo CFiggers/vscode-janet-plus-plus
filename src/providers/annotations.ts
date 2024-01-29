@@ -153,19 +153,21 @@ function decorateSelection(
     return !o.range.intersection(codeSelection);
   });
   decoration['range'] = codeSelection;
-  if (status != AnnotationStatus.PENDING && status != AnnotationStatus.REPL_WINDOW) {
-    const copyCommandUri = `command:janet.copyAnnotationHoverText?${encodeURIComponent(
-        JSON.stringify([{ text: resultString }])
-      )}`,
-      copyCommandMd = `[Copy](${copyCommandUri} "Copy results to the clipboard")`;
-    const openWindowCommandUri = `command:janet.showOutputWindow`,
-      openWindowCommandMd = `[Open Output Window](${openWindowCommandUri} "Open the output window")`;
-    const hoverMessage = new vscode.MarkdownString(
-      `${copyCommandMd} | ${openWindowCommandMd}\n` + '```clojure\n' + resultString + '\n```'
-    );
-    hoverMessage.isTrusted = true;
-    decoration['hoverMessage'] = status == AnnotationStatus.ERROR ? resultString : hoverMessage;
-  }
+  // TODO: Revisit hover pop-up on eval annotation
+  //
+  // if (status != AnnotationStatus.PENDING && status != AnnotationStatus.REPL_WINDOW) {
+  //   const copyCommandUri = `command:janet.copyAnnotationHoverText?${encodeURIComponent(
+  //       JSON.stringify([{ text: resultString }])
+  //     )}`,
+  //     copyCommandMd = `[Copy](${copyCommandUri} "Copy results to the clipboard")`;
+  //   const openWindowCommandUri = `command:janet.showOutputWindow`,
+  //     openWindowCommandMd = `[Open Output Window](${openWindowCommandUri} "Open the output window")`;
+  //   const hoverMessage = new vscode.MarkdownString(
+  //     `${copyCommandMd} | ${openWindowCommandMd}\n` + '```clojure\n' + resultString + '\n```'
+  //   );
+  //   hoverMessage.isTrusted = true;
+  //   decoration['hoverMessage'] = status == AnnotationStatus.ERROR ? resultString : hoverMessage;
+  // }
   // for (let s = 0; s < evalSelectionDecorationTypes.length; s++) {
   //     setSelectionDecorations(editor, [], s);.
   // }
