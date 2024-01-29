@@ -11,7 +11,7 @@ enum AnnotationStatus {
 
 const selectionBackgrounds = [
   'rgba(197, 197, 197, 0.07)',
-  'rgba(63, 255, 63, 0.05)',
+  'rgba(63, 255, 63, 0.09)',
   'rgba(255, 63, 63, 0.06)',
   'rgba(63, 63, 255, 0.1)',
 ];
