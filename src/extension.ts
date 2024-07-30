@@ -109,7 +109,7 @@ function sendToREPL(
 	f: (editor: vscode.TextEditor) => SelectionAndText,
 	ignoreSelection: boolean
 ){
-	const editor = vscode.window.activeTextEditor;
+    const editor = vscode.window.activeTextEditor;
 	if (editor == null) return;
 	const terminal: vscode.Terminal = vscode.window.terminals.find(x => x.name === terminalName);
 	const newTerminal = (terminal) ? false : true;
@@ -122,6 +122,20 @@ function sendToREPL(
 		}
 		
 		if ((editor.selection.isEmpty) || ignoreSelection) {
+            const lineText = editor.document.lineAt(editor.selection.active.line).text;
+			const cursorPosition = editor.selection.active;
+			const cursorCharIndex = cursorPosition.character;
+			const textBeforeCursor = lineText.substring(0, cursorCharIndex);
+			const textAfterCursor = lineText.substring(cursorCharIndex);
+			const moveCursor = 
+				cursorCharIndex > 0 // Cursor not at far left margin
+				&& textAfterCursor.trim() === '' // After cursor is only spaces or nothing
+				&& /.*\)/.test(textBeforeCursor.trim()); // Character before cursor is a closed paren allowing whitespace
+			if (moveCursor) {
+				const newPosition = cursorPosition.with(cursorPosition.line, lineText.lastIndexOf(")"));
+				editor.selection = new vscode.Selection(newPosition, newPosition);
+			}
+			
 			const selectionAndText = f(editor);
 			send(terminal, selectionAndText[1]);
 			annotations.decorateSelection(
@@ -131,6 +145,10 @@ function sendToREPL(
 				editor.selection.active,
 				undefined,
 				annotations.AnnotationStatus.SUCCESS);
+
+			if (moveCursor) {
+				editor.selection = new vscode.Selection(cursorPosition, cursorPosition);
+			}
 		}
 			// vscode.commands.executeCommand('editor.action.selectToBracket').then(() => send(terminal));
 		else
