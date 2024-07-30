@@ -16,8 +16,10 @@ Just starting with Janet? See the official language introduction [here](https://
   - "Slurp" (extend parentheses), "Barf" (shrink parentheses), and other PareEdit commands (see [this visual guide to ParEdit on the Calva website](https://calva.io/paredit/) for more info, most of which applies without modification to this extension too)
 - Language Server Protocol via embedded [Janet LSP](https://www.github.com/CFiggers/janet-lsp)
   - Inline compiler error underlining
-  - Function and macro autocomplete
+  - Function and macro symbol autocomplete
   - On-hover symbol definitions
+  - Pop-up signature helps
+  - Document formatting
 
 More coming soon!
 

@@ -11,7 +11,7 @@ enum AnnotationStatus {
 
 const selectionBackgrounds = [
   'rgba(197, 197, 197, 0.07)',
-  'rgba(63, 255, 63, 0.05)',
+  'rgba(63, 255, 63, 0.09)',
   'rgba(255, 63, 63, 0.06)',
   'rgba(63, 63, 255, 0.1)',
 ];
@@ -129,7 +129,8 @@ function decorateResults(
   let decorationRanges = util.cljsLib.getStateValue(key) || [];
   const decoration = evaluated(` => ${resultString} `, resultString, hasError);
   decorationRanges = _.filter(decorationRanges, (o) => {
-    return !o.codeRange.intersection(codeSelection);
+    // Check if o and o.codeRange exist before accessing intersection
+    return o && o.codeRange ? !o.codeRange.intersection(codeSelection) : true;
   });
   decoration['codeRange'] = codeSelection;
   decoration['range'] = new vscode.Selection(codeSelection.end, codeSelection.end);
@@ -150,22 +151,25 @@ function decorateSelection(
   const decoration = {};
   let decorationRanges = util.cljsLib.getStateValue(key) || [];
   decorationRanges = _.filter(decorationRanges, (o) => {
-    return !o.range.intersection(codeSelection);
+    // Check if o and o.codeRange exist before accessing intersection
+    return o && o.codeRange ? !o.codeRange.intersection(codeSelection) : true;
   });
   decoration['range'] = codeSelection;
-  if (status != AnnotationStatus.PENDING && status != AnnotationStatus.REPL_WINDOW) {
-    const copyCommandUri = `command:janet.copyAnnotationHoverText?${encodeURIComponent(
-        JSON.stringify([{ text: resultString }])
-      )}`,
-      copyCommandMd = `[Copy](${copyCommandUri} "Copy results to the clipboard")`;
-    const openWindowCommandUri = `command:janet.showOutputWindow`,
-      openWindowCommandMd = `[Open Output Window](${openWindowCommandUri} "Open the output window")`;
-    const hoverMessage = new vscode.MarkdownString(
-      `${copyCommandMd} | ${openWindowCommandMd}\n` + '```clojure\n' + resultString + '\n```'
-    );
-    hoverMessage.isTrusted = true;
-    decoration['hoverMessage'] = status == AnnotationStatus.ERROR ? resultString : hoverMessage;
-  }
+  // TODO: Revisit hover pop-up on eval annotation
+  //
+  // if (status != AnnotationStatus.PENDING && status != AnnotationStatus.REPL_WINDOW) {
+  //   const copyCommandUri = `command:janet.copyAnnotationHoverText?${encodeURIComponent(
+  //       JSON.stringify([{ text: resultString }])
+  //     )}`,
+  //     copyCommandMd = `[Copy](${copyCommandUri} "Copy results to the clipboard")`;
+  //   const openWindowCommandUri = `command:janet.showOutputWindow`,
+  //     openWindowCommandMd = `[Open Output Window](${openWindowCommandUri} "Open the output window")`;
+  //   const hoverMessage = new vscode.MarkdownString(
+  //     `${copyCommandMd} | ${openWindowCommandMd}\n` + '```clojure\n' + resultString + '\n```'
+  //   );
+  //   hoverMessage.isTrusted = true;
+  //   decoration['hoverMessage'] = status == AnnotationStatus.ERROR ? resultString : hoverMessage;
+  // }
   // for (let s = 0; s < evalSelectionDecorationTypes.length; s++) {
   //     setSelectionDecorations(editor, [], s);.
   // }

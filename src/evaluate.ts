@@ -1,4 +1,4 @@
-// import * as vscode from 'vscode';
+import * as vscode from 'vscode';
 // import * as state from './state';
 // import annotations from './providers/annotations';
 // import * as path from 'path';
@@ -14,7 +14,7 @@
 // import { getStateValue } from '../out/cljs-lib/cljs-lib';
 // import { getConfig } from './config';
 // import * as replSession from './nrepl/repl-session';
-// import * as getText from './util/get-text';
+import * as getText from './util/get-text';
 
 // function interruptAllEvaluations() {
 //   if (util.getConnectedState()) {
@@ -274,13 +274,13 @@
 //   }
 // }
 
-// function _currentTopLevelFormText(editor: vscode.TextEditor): getText.SelectionAndText {
-//   return getText.currentTopLevelFormText(editor?.document, editor?.selection.active);
-// }
+export function _currentTopLevelFormText(editor: vscode.TextEditor): getText.SelectionAndText {
+  return getText.currentTopLevelFormText(editor?.document, editor?.selection.active);
+}
 
-// function _currentEnclosingFormText(editor: vscode.TextEditor): getText.SelectionAndText {
-//   return getText.currentEnclosingFormText(editor?.document, editor?.selection.active);
-// }
+export function _currentEnclosingFormText(editor: vscode.TextEditor): getText.SelectionAndText {
+  return getText.currentEnclosingFormText(editor?.document, editor?.selection.active);
+}
 
 // function evaluateSelectionReplace(document = {}, options = {}) {
 //   evaluateSelection(
