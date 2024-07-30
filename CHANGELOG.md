@@ -7,6 +7,8 @@
   - No longer select evaluated form(s), losing cursor location; instead, highlight evaluated form with green background (and clear highlight only on edit)
 - [Janet LSP](https://github.com/cfiggers/janet-lsp)
   - Update to v0.0.5
+    - Better syntax highlighting in on-hover popups 
+      - Only syntax highlight function signature, not docstring text
     - Bugfixes
       - Fix Backspace outside of top-level form causing server crash
 - Syntax Highlighting
