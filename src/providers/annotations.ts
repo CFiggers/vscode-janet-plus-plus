@@ -129,7 +129,8 @@ function decorateResults(
   let decorationRanges = util.cljsLib.getStateValue(key) || [];
   const decoration = evaluated(` => ${resultString} `, resultString, hasError);
   decorationRanges = _.filter(decorationRanges, (o) => {
-    return !o.codeRange.intersection(codeSelection);
+    // Check if o and o.codeRange exist before accessing intersection
+    return o && o.codeRange ? !o.codeRange.intersection(codeSelection) : true;
   });
   decoration['codeRange'] = codeSelection;
   decoration['range'] = new vscode.Selection(codeSelection.end, codeSelection.end);
@@ -150,7 +151,8 @@ function decorateSelection(
   const decoration = {};
   let decorationRanges = util.cljsLib.getStateValue(key) || [];
   decorationRanges = _.filter(decorationRanges, (o) => {
-    return !o.range.intersection(codeSelection);
+    // Check if o and o.codeRange exist before accessing intersection
+    return o && o.codeRange ? !o.codeRange.intersection(codeSelection) : true;
   });
   decoration['range'] = codeSelection;
   // TODO: Revisit hover pop-up on eval annotation
