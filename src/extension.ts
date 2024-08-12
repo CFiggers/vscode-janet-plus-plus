@@ -127,12 +127,19 @@ function sendToREPL(
 			const cursorCharIndex = cursorPosition.character;
 			const textBeforeCursor = lineText.substring(0, cursorCharIndex);
 			const textAfterCursor = lineText.substring(cursorCharIndex);
-			const moveCursor = 
+			const moveCursorBack = 
 				cursorCharIndex > 0 // Cursor not at far left margin
 				&& textAfterCursor.trim() === '' // After cursor is only spaces or nothing
 				&& /.*\)/.test(textBeforeCursor.trim()); // Character before cursor is a closed paren allowing whitespace
-			if (moveCursor) {
+			const moveCursorForward =
+				textAfterCursor.substring(0, 1) === '('
+				&& !moveCursorBack;
+			if (moveCursorBack) {
 				const newPosition = cursorPosition.with(cursorPosition.line, lineText.lastIndexOf(")"));
+				editor.selection = new vscode.Selection(newPosition, newPosition);
+			}
+			if (moveCursorForward) {
+				const newPosition = cursorPosition.with(cursorPosition.line, cursorPosition.character + 1);
 				editor.selection = new vscode.Selection(newPosition, newPosition);
 			}
 			
@@ -146,7 +153,7 @@ function sendToREPL(
 				undefined,
 				annotations.AnnotationStatus.SUCCESS);
 
-			if (moveCursor) {
+			if (moveCursorBack || moveCursorForward) {
 				editor.selection = new vscode.Selection(cursorPosition, cursorPosition);
 			}
 		}
