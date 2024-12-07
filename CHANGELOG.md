@@ -1,5 +1,30 @@
 # Change Log
 
+## v1.1.7 
+
+- Syntax Highlighting
+  - Updates for Janet 1.37.1
+- Paredit
+  - Auto-close parens more often
+- Janet LSP
+  - Update to v0.0.9
+    - Bugfixes
+      - Decode percent encoding in URIs before saving to or lookup from state
+      - Typo: :documnts rather than :documents, causing redundant keys in state when diagnostics are pull (vs push)
+      - Don't exit loop when handle-message returns an :error result, instead report it and reenter loop gracefully
+    - Misc
+      - New "janet/tellJoke" method (testing for future custom LSP RPC calls)
+- Misc
+  - Support Janet LSP's new `janet/tellJoke` custom command
+  
+## v1.1.6 
+
+- Evaluate
+  - Now evaluate S-expr immediately after cursor if available
+- Janet LSP
+  - Update to v0.0.7
+    - Bugfixes and improvments
+
 ## v1.1.5
 
 - Evaluate Form
