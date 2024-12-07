@@ -3,7 +3,7 @@
 	"displayName": "Janet++",
 	"description": "Expanded Janet language support for Visual Studio Code",
 	"icon": "images/icon_png_minimal_glow.png",
-	"version": "1.1.6",
+	"version": "1.1.7",
 	"author": "Caleb Figgers",
 	"publisher": "CalebFiggers",
 	"repository": {
@@ -153,7 +153,7 @@
 					},
 					"janet.lsp.customJanetLspCommand": {
 						"type": "string",
-						"markdownDescription": "A custom command to execute when attempting to launch an LSP for Janet. This command will be attempted as though run at the command line and should result in a persistent server process that can handle LSP requests via STDIO."
+						"markdownDescription": "A custom command to execute when attempting to launch an LSP for Janet. This command will be attempted as though run at the command line and should result in a persistent server process that can handle LSP requests via STDIO.\n\nThe recommended strategy is to `jpm install` your own custom janet-lsp project and then set this field to `janet-lsp`."
 					},
 					"janet.lsp.maxNumberOfProblems": {
 						"scope": "resource",
@@ -205,6 +205,13 @@
 				"command": "janet.continueComment",
 				"title": "Janet: Continue Comment (add a commented line below).",
 				"category": "Janet"
+			},
+			{
+				"category": "Janet LSP",
+				"command": "janet.lsp.tellJoke",
+				"title": "Tell a Joke",
+				"when": "editorLangId == janet",
+				"enablement": "editorLangId == janet"
 			},
 			{
 				"category": "Janet Paredit",

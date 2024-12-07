@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import {
     ExtensionContext,
+    commands
 } from 'vscode';
 
 import * as config from '../config';
@@ -31,7 +32,7 @@ import { type } from 'os';
 //     status: LspStatus;
 //   };
 
-let client: LanguageClient;
+let client: LanguageClient | undefined = undefined;
 
 function getServer(): string {
     const windows = process.platform === "win32";
@@ -240,7 +241,24 @@ export function activate(context: ExtensionContext) {
 		clientOptions
 	);
 
+    context.subscriptions.push(
+        vscode.commands.registerCommand('janet.lsp.tellJoke', commandTellJoke )
+    );
+
 	client.start();
+}
+
+async function commandTellJoke() : Promise<void> {
+    const activeEditor = vscode.window.activeTextEditor;
+    if (activeEditor === undefined) return; 
+
+    const uri = activeEditor.document.uri.toString();
+
+    const result = await client?.sendRequest("janet/tellJoke", {});
+    void vscode.window.showInformationMessage(
+        "Question: " + result["question"] + "\r\n\r\n" +
+        "Answer: " + result["answer"]
+    );
 }
 
 export function deactivate(){
