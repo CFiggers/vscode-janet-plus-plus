@@ -93,6 +93,18 @@ function getDiscoverJpmTreeOpt(): string[] {
     return discoverJpmTreeOpt;
 }
 
+function getDebugLspOpt(): string[] {
+    let debugLsp: string[];
+
+    if (config.getConfig().debugLsp) {
+        debugLsp = ["--debug"];
+    } else {
+        debugLsp = [];
+    }
+
+    return debugLsp;
+}
+
 function getServerOptions(): ServerOptions {
     let options: ServerOptions;
     const lspConfig = config.getConfig().customJanetLspCommand;
@@ -107,7 +119,8 @@ function getServerOptions(): ServerOptions {
     } else {
         options = {
             command: "janet",
-            args: ["-i", getServerImage()].concat(getDiscoverJpmTreeOpt()),
+            args: ["-i", getServerImage()]
+                .concat(getDiscoverJpmTreeOpt(), getDebugLspOpt()),
             transport: TransportKind.stdio
         };
     }
@@ -173,7 +186,7 @@ function getServerOptions(): ServerOptions {
 //   }
 // }
 
-export function activate(context: ExtensionContext) {
+export async function activate(context: ExtensionContext) {
     
     // TODO: Add a status bar showing current health of janet-lsp 
 
@@ -220,6 +233,16 @@ export function activate(context: ExtensionContext) {
 	// 	args: ["-i", getServerImage()],
 	// 	transport: TransportKind.stdio
 	// };
+
+    if (vscode.env.sessionId != context.workspaceState.get('janet.lsp.debugSession')) {
+        // Reset LSP debug flag in user settings on vscode start.
+        await vscode.workspace.getConfiguration().update('janet.lsp.debugLsp', false, true);
+        context.workspaceState.update('janet.lsp.debugSession', vscode.env.sessionId);
+    }
+    
+    if (config.getConfig().debugLsp && !config.getConfig().customJanetLspCommand) {
+        vscode.window.showInformationMessage('Janet LSP debugging enabled.');
+    }
 
     const serverOptions: ServerOptions = getServerOptions();
 
