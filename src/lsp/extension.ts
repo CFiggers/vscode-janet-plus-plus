@@ -236,7 +236,9 @@ export async function activate(context: ExtensionContext) {
 
     if (vscode.env.sessionId != context.workspaceState.get('janet.lsp.debugSession')) {
         // Reset LSP debug flag in user settings on vscode start.
-        await vscode.workspace.getConfiguration().update('janet.lsp.debugLsp', false, true);
+        if (config.getConfig().debugLsp) {
+            await vscode.workspace.getConfiguration().update('janet.lsp.debugLsp', undefined, true);
+        }
         context.workspaceState.update('janet.lsp.debugSession', vscode.env.sessionId);
     }
     
