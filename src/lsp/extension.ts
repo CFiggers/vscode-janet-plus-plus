@@ -186,7 +186,7 @@ function getServerOptions(): ServerOptions {
 //   }
 // }
 
-export async function activate(context: ExtensionContext) {
+export function activate(context: ExtensionContext) {
     
     // TODO: Add a status bar showing current health of janet-lsp 
 
@@ -233,14 +233,6 @@ export async function activate(context: ExtensionContext) {
 	// 	args: ["-i", getServerImage()],
 	// 	transport: TransportKind.stdio
 	// };
-
-    if (vscode.env.sessionId != context.workspaceState.get('janet.lsp.debugSession')) {
-        // Reset LSP debug flag in user settings on vscode start.
-        if (config.getConfig().debugLsp) {
-            await vscode.workspace.getConfiguration().update('janet.lsp.debugLsp', undefined, true);
-        }
-        context.workspaceState.update('janet.lsp.debugSession', vscode.env.sessionId);
-    }
     
     if (config.getConfig().debugLsp && !config.getConfig().customJanetLspCommand) {
         vscode.window.showInformationMessage('Janet LSP debugging enabled.');
