@@ -1,6 +1,10 @@
 # Change Log
 
-## v1.1.7 
+## v1.1.8 (2024-12-20)
+
+- Changes in v1.1.7 promoted to full release
+
+## v1.1.7 (2024-12-07, Pre-release)
 
 - Syntax Highlighting
   - Updates for Janet 1.37.1
@@ -17,7 +21,7 @@
 - Misc
   - Support Janet LSP's new `janet/tellJoke` custom command
   
-## v1.1.6 
+## v1.1.6 (2024-08-11)
 
 - Evaluate
   - Now evaluate S-expr immediately after cursor if available
@@ -25,7 +29,7 @@
   - Update to v0.0.7
     - Bugfixes and improvments
 
-## v1.1.5
+## v1.1.5 (2024-07-29, Pre-release)
 
 - Evaluate Form
   - Added new command and keyboard shortcut to eval top-level form (`Alt+Shift+E` by default)
@@ -39,13 +43,13 @@
 - Syntax Highlighting
   - Added new stdlib forms (including `bundle/` module new with Janet 1.35)
 
-## v1.1.4
+## v1.1.4 (2024-20-22)
 
-- Changes v1.1.3 promoted to full release 
+- Changes in v1.1.3 promoted to full release 
 - [Janet LSP](https://github.com/cfiggers/janet-lsp) Bugfix
   - Fixed bug introduced with v1.1.3 (LSP v0.0.4) where `startup.janet` was being run, but not merged into `root-env`
 
-## v1.1.3 (Pre-release)
+## v1.1.3 (2024-01-26, Pre-release)
 
 - [Janet LSP](https://github.com/cfiggers/janet-lsp)
   - Update to v0.0.4
@@ -59,11 +63,11 @@
 - Syntax highlighting
   - Additional core lib functions added
 
-## v1.1.2
+## v1.1.2 (2024-01-10)
 
 - Changes v1.1.1 promoted to full release
 
-## v1.1.1 (Pre-release)
+## v1.1.1 (2024-01-02, Pre-release)
 
 - [Janet LSP](https://github.com/cfiggers/janet-lsp)
   - Autocompletion
@@ -77,7 +81,7 @@
   - Misc
     - Some prep work implemented setting up Signature Helps
 
-## v1.1.0
+## v1.1.0 (2023-10-29)
 
 - Initial release on VS Code Extension Marketplace
 - Improvements
