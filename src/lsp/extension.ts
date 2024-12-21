@@ -93,6 +93,18 @@ function getDiscoverJpmTreeOpt(): string[] {
     return discoverJpmTreeOpt;
 }
 
+function getDebugLspOpt(): string[] {
+    let debugLsp: string[];
+
+    if (config.getConfig().debugLsp) {
+        debugLsp = ["--debug"];
+    } else {
+        debugLsp = [];
+    }
+
+    return debugLsp;
+}
+
 function getServerOptions(): ServerOptions {
     let options: ServerOptions;
     const lspConfig = config.getConfig().customJanetLspCommand;
@@ -107,7 +119,8 @@ function getServerOptions(): ServerOptions {
     } else {
         options = {
             command: "janet",
-            args: ["-i", getServerImage()].concat(getDiscoverJpmTreeOpt()),
+            args: ["-i", getServerImage()]
+                .concat(getDiscoverJpmTreeOpt(), getDebugLspOpt()),
             transport: TransportKind.stdio
         };
     }
@@ -220,6 +233,10 @@ export function activate(context: ExtensionContext) {
 	// 	args: ["-i", getServerImage()],
 	// 	transport: TransportKind.stdio
 	// };
+    
+    if (config.getConfig().debugLsp && !config.getConfig().customJanetLspCommand) {
+        vscode.window.showInformationMessage('Janet LSP debugging enabled.');
+    }
 
     const serverOptions: ServerOptions = getServerOptions();
 

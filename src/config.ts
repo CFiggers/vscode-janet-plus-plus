@@ -168,7 +168,8 @@ function getConfig() {
     // Janet LSP
     customJanetLspCommand: lspOptions.get<string>('customJanetLspCommand'),
     dontDiscoverJpmTree: lspOptions.get<boolean>('dontDiscoverJpmTree'),
-    enableLsp: lspOptions.get<boolean>('enableLsp')
+    enableLsp: lspOptions.get<boolean>('enableLsp'),
+    debugLsp: lspOptions.get<boolean>('debugLsp')
   };
 }
 
