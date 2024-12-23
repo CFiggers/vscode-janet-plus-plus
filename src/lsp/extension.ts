@@ -33,6 +33,7 @@ import { type } from 'os';
 //   };
 
 let client: LanguageClient | undefined = undefined;
+const languageClients = new Map<string, LanguageClient>();
 
 function getServer(): string {
     const windows = process.platform === "win32";
@@ -258,6 +259,8 @@ export function activate(context: ExtensionContext) {
 		clientOptions
 	);
 
+    languageClients.set("janet-lsp", client);
+
     context.subscriptions.push(
         vscode.commands.registerCommand('janet.lsp.tellJoke', commandTellJoke )
     );
@@ -266,16 +269,19 @@ export function activate(context: ExtensionContext) {
 }
 
 async function commandTellJoke() : Promise<void> {
-    const activeEditor = vscode.window.activeTextEditor;
-    if (activeEditor === undefined) return; 
+    const client = languageClients.get("janet-lsp");
 
-    const uri = activeEditor.document.uri.toString();
+    if (client) {
+        const result = await client?.sendRequest("janet/tellJoke", {});
+        void vscode.window.showInformationMessage(
+            "Question: " + result["question"] + "\r\n\r\n" +
+            "Answer: " + result["answer"]
+        );
+    } else {
+        console.error("Janet LSP not found");
+    }
+}
 
-    const result = await client?.sendRequest("janet/tellJoke", {});
-    void vscode.window.showInformationMessage(
-        "Question: " + result["question"] + "\r\n\r\n" +
-        "Answer: " + result["answer"]
-    );
 }
 
 export function deactivate(){
