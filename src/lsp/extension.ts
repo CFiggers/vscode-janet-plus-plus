@@ -106,6 +106,18 @@ function getDebugLspOpt(): string[] {
     return debugLsp;
 }
 
+function getConsolePort(): string[] {
+    let debugLsp: string[];
+
+    if (config.getConfig().lspConsolePort) {
+        debugLsp = ["--debug-port", config.getConfig().lspConsolePort];
+    } else {
+        debugLsp = [];
+    }
+
+    return debugLsp;
+}
+
 function getLoggingDetailConsole(): string[]{
     let loggingDetailConsole: string[];
 
@@ -176,7 +188,8 @@ function getServerOptions(): ServerOptions {
             getDebugLspOpt(),
             getDiscoverJpmTreeOpt(),
             getLoggingDetailConsole(),
-            getLoggingDetailFile()
+            getLoggingDetailFile(),
+            getConsolePort()
         );
         console.log("LSP args are: ", args);
         options = {

@@ -171,7 +171,8 @@ function getConfig() {
     enableLsp: lspOptions.get<boolean>('enableLsp'),
     debugLsp: lspOptions.get<boolean>('debugLsp'),
     loggingDetailConsole: lspOptions.get<string>('loggingdetail.console'),
-    loggingDetailFile: lspOptions.get<string>('loggingdetail.file')
+    loggingDetailFile: lspOptions.get<string>('loggingdetail.file'),
+    lspConsolePort: lspOptions.get<string>('consolePort')
   };
 }
 

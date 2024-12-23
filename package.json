@@ -203,6 +203,10 @@
 						],
 						"default": "verbose",
 						"description": "Sets the detail level of debug logs printed to `janetlsp.log` file. Only applies when :debug is enabled on the server."
+					},
+					"janet.lsp.consolePort": {
+						"type": "string",
+						"description": "Start the LSP listening to a custom port for purposes of connecting to the `janet-lsp --console` CLI option."
 					}
 				}
 			}
