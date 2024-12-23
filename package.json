@@ -17,7 +17,9 @@
 		"Programming Languages",
 		"Formatters"
 	],
-	"activationEvents": [],
+	"activationEvents": [
+		"workspaceContains:**/project.janet"
+	],
 	"main": "./dist/extension.js",
 	"contributes": {
 		"iconThemes": [],
