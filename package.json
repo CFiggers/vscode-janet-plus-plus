@@ -245,6 +245,13 @@
 			},
 			{
 				"category": "Janet LSP",
+				"command": "janet.lsp.restartLsp",
+				"title": "Restart Janet LSP",
+				"when": "editorLangId == janet",
+				"enablement": "editorLangId == janet"
+			},
+			{
+				"category": "Janet LSP",
 				"command": "janet.lsp.enableDebug",
 				"title": "Enable Debug Logging",
 				"when": "editorLangId == janet",

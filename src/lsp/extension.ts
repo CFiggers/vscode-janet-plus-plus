@@ -334,6 +334,10 @@ export function activate(context: ExtensionContext) {
     );
 
     context.subscriptions.push(
+        vscode.commands.registerCommand('janet.lsp.restartLsp', commandRestartLSP )
+    );
+
+    context.subscriptions.push(
         vscode.workspace.onDidChangeConfiguration(async (e: vscode.ConfigurationChangeEvent) => {
             console.log("Configuration changed");
 
@@ -357,6 +361,20 @@ export function activate(context: ExtensionContext) {
     );
 
 	client.start();
+}
+
+async function commandRestartLSP() : Promise<void> {
+    const client = languageClients.get("janet-lsp");
+
+    if (client) {
+        await client?.sendRequest("shutdown", {}).then(() => {
+            client?.sendRequest("exit", {});
+        }).then(() => {
+            client?.start();
+        });
+    } else {
+        console.error("Janet LSP not found");
+    }
 }
 
 async function commandTellJoke() : Promise<void> {
