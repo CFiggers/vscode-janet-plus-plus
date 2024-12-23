@@ -333,6 +333,29 @@ export function activate(context: ExtensionContext) {
         vscode.commands.registerCommand('janet.lsp.disableDebug', commandDisableDebug )
     );
 
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeConfiguration(async (e: vscode.ConfigurationChangeEvent) => {
+            console.log("Configuration changed");
+
+            if (e.affectsConfiguration('janet.lsp.loggingdetail.console')) {
+                console.log("Configuration changed: janet.lsp.loggingdetail.console");
+                console.log('Current clients:', Array.from(languageClients.keys()));
+
+                const newLogLevel: string = vscode.workspace.getConfiguration().get('janet.lsp.loggingdetail.console');
+                // await commandTellJoke();
+                await setDebugLevel(newLogLevel);
+            }
+            if (e.affectsConfiguration('janet.lsp.loggingdetail.file')) {
+                console.log("Configuration changed: janet.lsp.loggingdetail.file");
+                console.log('Current clients:', Array.from(languageClients.keys()));
+
+                const newLogLevel: string = vscode.workspace.getConfiguration().get('janet.lsp.loggingdetail.file');
+                // await commandTellJoke();
+                await setDebugToFileLevel(newLogLevel);
+            }
+        })
+    );
+
 	client.start();
 }
 
@@ -375,6 +398,36 @@ async function commandDisableDebug() : Promise<void> {
     }
 }
 
+async function setDebugLevel(loglevel: string) : Promise<void> {
+    console.log("setDebugLevel called: Setting log level to: " + loglevel);
+
+    const client = languageClients.get("janet-lsp");
+    
+    if (client) {
+        console.log("Sending to ", client?.name || "none");
+        const result = await client.sendRequest("setLogLevel", {level: loglevel});
+        void vscode.window.showInformationMessage(
+            result["message"]
+        );
+    } else {
+        console.error("Janet LSP not found");
+    }
+}
+
+async function setDebugToFileLevel(loglevel: string) : Promise<void> {
+    console.log("setDebugToFileLevel called: Setting log to file level to: " + loglevel);
+
+    const client = languageClients.get("janet-lsp");
+
+    if (client) {
+        console.log("Sending to ", client?.name || "none");
+        const result = await client.sendRequest("setLogToFileLevel", {level: loglevel});
+        void vscode.window.showInformationMessage(
+            result["message"]
+        );
+    } else {
+        console.error("Janet LSP not found");
+    }
 }
 
 export function deactivate(){
