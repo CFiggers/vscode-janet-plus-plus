@@ -145,7 +145,8 @@
 					"janet.lsp.enableLsp": {
 						"type": "boolean",
 						"markdownDescription": "Whether or not to start up an LSP for Janet when activating Janet++. By default, will start up [Janet LSP](https://www.github.com/CFiggers/janet-lsp), which ships with Janet++.",
-						"default": true
+						"default": true,
+						"order": 0
 					},
 					"janet.lsp.dontDiscoverJpmTree": {
 						"type": "boolean",
