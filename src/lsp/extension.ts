@@ -106,6 +106,60 @@ function getDebugLspOpt(): string[] {
     return debugLsp;
 }
 
+function getLoggingDetailConsole(): string[]{
+    let loggingDetailConsole: string[];
+
+    if (config.getConfig().loggingDetailConsole){
+        let level: number;
+        switch (config.getConfig().loggingDetailConsole) {
+            case "off":
+                level = 0;
+                break;
+            case "messages":
+                level = 1;
+                break;
+            case "verbose":
+                level = 2;
+                break;
+            case "veryverbose":
+                level = 3;
+                break;
+            default:
+                break;
+        }
+        loggingDetailConsole = ["--log-level", level.toString()];
+    }
+
+    return loggingDetailConsole;
+}
+
+function getLoggingDetailFile(): string[]{
+    let loggingDetailConsole: string[];
+
+    if (config.getConfig().loggingDetailFile){
+        let level: number;
+        switch (config.getConfig().loggingDetailFile) {
+            case "off":
+                level = 0;
+                break;
+            case "messages":
+                level = 1;
+                break;
+            case "verbose":
+                level = 2;
+                break;
+            case "veryverbose":
+                level = 3;
+                break;
+            default:
+                break;
+        }
+        loggingDetailConsole = ["--log-to-file-level", level.toString()];
+    }
+
+    return loggingDetailConsole;
+}
+
 function getServerOptions(): ServerOptions {
     let options: ServerOptions;
     const lspConfig = config.getConfig().customJanetLspCommand;
@@ -118,10 +172,16 @@ function getServerOptions(): ServerOptions {
             transport: TransportKind.stdio
         };
     } else {
+        const args = ["-i", getServerImage()].concat(
+            getDebugLspOpt(),
+            getDiscoverJpmTreeOpt(),
+            getLoggingDetailConsole(),
+            getLoggingDetailFile()
+        );
+        console.log("LSP args are: ", args);
         options = {
             command: "janet",
-            args: ["-i", getServerImage()]
-                .concat(getDiscoverJpmTreeOpt(), getDebugLspOpt()),
+            args: args,
             transport: TransportKind.stdio
         };
     }
@@ -263,6 +323,14 @@ export function activate(context: ExtensionContext) {
 
     context.subscriptions.push(
         vscode.commands.registerCommand('janet.lsp.tellJoke', commandTellJoke )
+    );
+    
+    context.subscriptions.push(
+        vscode.commands.registerCommand('janet.lsp.enableDebug', commandEnableDebug )
+    );
+    
+    context.subscriptions.push(
+        vscode.commands.registerCommand('janet.lsp.disableDebug', commandDisableDebug )
     );
 
 	client.start();

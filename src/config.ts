@@ -169,7 +169,9 @@ function getConfig() {
     customJanetLspCommand: lspOptions.get<string>('customJanetLspCommand'),
     dontDiscoverJpmTree: lspOptions.get<boolean>('dontDiscoverJpmTree'),
     enableLsp: lspOptions.get<boolean>('enableLsp'),
-    debugLsp: lspOptions.get<boolean>('debugLsp')
+    debugLsp: lspOptions.get<boolean>('debugLsp'),
+    loggingDetailConsole: lspOptions.get<string>('loggingdetail.console'),
+    loggingDetailFile: lspOptions.get<string>('loggingdetail.file')
   };
 }
 

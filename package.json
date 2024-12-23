@@ -177,6 +177,30 @@
 						],
 						"default": "off",
 						"description": "Traces the communication between VS Code and the language server."
+					},
+					"janet.lsp.loggingdetail.console": {
+						"scope": "window",
+						"type": "string",
+						"enum": [
+							"off",
+							"messages",
+							"verbose",
+							"veryverbose"
+						],
+						"default": "messages",
+						"description": "Sets the detail level of debug logs printed to console. Only applies when :debug is enabled on the server."
+					},
+					"janet.lsp.loggingdetail.file": {
+						"scope": "window",
+						"type": "string",
+						"enum": [
+							"off",
+							"messages",
+							"verbose",
+							"veryverbose"
+						],
+						"default": "verbose",
+						"description": "Sets the detail level of debug logs printed to `janetlsp.log` file. Only applies when :debug is enabled on the server."
 					}
 				}
 			}
@@ -216,6 +240,20 @@
 				"category": "Janet LSP",
 				"command": "janet.lsp.tellJoke",
 				"title": "Tell a Joke",
+				"when": "editorLangId == janet",
+				"enablement": "editorLangId == janet"
+			},
+			{
+				"category": "Janet LSP",
+				"command": "janet.lsp.enableDebug",
+				"title": "Enable Debug Logging",
+				"when": "editorLangId == janet",
+				"enablement": "editorLangId == janet"
+			},
+			{
+				"category": "Janet LSP",
+				"command": "janet.lsp.disableDebug",
+				"title": "Disable Debug Logging",
 				"when": "editorLangId == janet",
 				"enablement": "editorLangId == janet"
 			},
