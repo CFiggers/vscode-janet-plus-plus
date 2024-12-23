@@ -282,6 +282,31 @@ async function commandTellJoke() : Promise<void> {
     }
 }
 
+async function commandEnableDebug() : Promise<void> {
+    const client = languageClients.get("janet-lsp");
+    if (client) {
+        const result = await client?.sendRequest("enableDebug", {});
+        void vscode.window.showInformationMessage(
+            result["message"]
+        );
+
+    } else {
+        console.error("Janet LSP not found");
+    }
+}
+
+async function commandDisableDebug() : Promise<void> {
+    const client = languageClients.get("janet-lsp");
+    if (client) {
+        const result = await client?.sendRequest("disableDebug", {});
+        void vscode.window.showInformationMessage(
+            result["message"]
+        );
+    } else {
+        console.error("Janet LSP not found");
+    }
+}
+
 }
 
 export function deactivate(){
