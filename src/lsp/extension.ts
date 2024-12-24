@@ -33,6 +33,7 @@ import { type } from 'os';
 //   };
 
 let client: LanguageClient | undefined = undefined;
+const languageClients = new Map<string, LanguageClient>();
 
 function getServer(): string {
     const windows = process.platform === "win32";
@@ -105,6 +106,72 @@ function getDebugLspOpt(): string[] {
     return debugLsp;
 }
 
+function getConsolePort(): string[] {
+    let debugLsp: string[];
+
+    if (config.getConfig().lspConsolePort) {
+        debugLsp = ["--debug-port", config.getConfig().lspConsolePort];
+    } else {
+        debugLsp = [];
+    }
+
+    return debugLsp;
+}
+
+function getLoggingDetailConsole(): string[]{
+    let loggingDetailConsole: string[];
+
+    if (config.getConfig().loggingDetailConsole){
+        let level: number;
+        switch (config.getConfig().loggingDetailConsole) {
+            case "off":
+                level = 0;
+                break;
+            case "messages":
+                level = 1;
+                break;
+            case "verbose":
+                level = 2;
+                break;
+            case "veryverbose":
+                level = 3;
+                break;
+            default:
+                break;
+        }
+        loggingDetailConsole = ["--log-level", level.toString()];
+    }
+
+    return loggingDetailConsole;
+}
+
+function getLoggingDetailFile(): string[]{
+    let loggingDetailConsole: string[];
+
+    if (config.getConfig().loggingDetailFile){
+        let level: number;
+        switch (config.getConfig().loggingDetailFile) {
+            case "off":
+                level = 0;
+                break;
+            case "messages":
+                level = 1;
+                break;
+            case "verbose":
+                level = 2;
+                break;
+            case "veryverbose":
+                level = 3;
+                break;
+            default:
+                break;
+        }
+        loggingDetailConsole = ["--log-to-file-level", level.toString()];
+    }
+
+    return loggingDetailConsole;
+}
+
 function getServerOptions(): ServerOptions {
     let options: ServerOptions;
     const lspConfig = config.getConfig().customJanetLspCommand;
@@ -117,10 +184,17 @@ function getServerOptions(): ServerOptions {
             transport: TransportKind.stdio
         };
     } else {
+        const args = ["-i", getServerImage()].concat(
+            getDebugLspOpt(),
+            getDiscoverJpmTreeOpt(),
+            getLoggingDetailConsole(),
+            getLoggingDetailFile(),
+            getConsolePort()
+        );
+        console.log("LSP args are: ", args);
         options = {
             command: "janet",
-            args: ["-i", getServerImage()]
-                .concat(getDiscoverJpmTreeOpt(), getDebugLspOpt()),
+            args: args,
             transport: TransportKind.stdio
         };
     }
@@ -258,24 +332,133 @@ export function activate(context: ExtensionContext) {
 		clientOptions
 	);
 
+    languageClients.set("janet-lsp", client);
+
     context.subscriptions.push(
         vscode.commands.registerCommand('janet.lsp.tellJoke', commandTellJoke )
+    );
+    
+    context.subscriptions.push(
+        vscode.commands.registerCommand('janet.lsp.enableDebug', commandEnableDebug )
+    );
+    
+    context.subscriptions.push(
+        vscode.commands.registerCommand('janet.lsp.disableDebug', commandDisableDebug )
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('janet.lsp.restartLsp', commandRestartLSP )
+    );
+
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeConfiguration(async (e: vscode.ConfigurationChangeEvent) => {
+            console.log("Configuration changed");
+
+            if (e.affectsConfiguration('janet.lsp.loggingdetail.console')) {
+                console.log("Configuration changed: janet.lsp.loggingdetail.console");
+                console.log('Current clients:', Array.from(languageClients.keys()));
+
+                const newLogLevel: string = vscode.workspace.getConfiguration().get('janet.lsp.loggingdetail.console');
+                // await commandTellJoke();
+                await setDebugLevel(newLogLevel);
+            }
+            if (e.affectsConfiguration('janet.lsp.loggingdetail.file')) {
+                console.log("Configuration changed: janet.lsp.loggingdetail.file");
+                console.log('Current clients:', Array.from(languageClients.keys()));
+
+                const newLogLevel: string = vscode.workspace.getConfiguration().get('janet.lsp.loggingdetail.file');
+                // await commandTellJoke();
+                await setDebugToFileLevel(newLogLevel);
+            }
+        })
     );
 
 	client.start();
 }
 
+async function commandRestartLSP() : Promise<void> {
+    const client = languageClients.get("janet-lsp");
+
+    if (client) {
+        await client?.sendRequest("shutdown", {}).then(() => {
+            client?.sendRequest("exit", {});
+        }).then(() => {
+            client?.start();
+        });
+    } else {
+        console.error("Janet LSP not found");
+    }
+}
+
 async function commandTellJoke() : Promise<void> {
-    const activeEditor = vscode.window.activeTextEditor;
-    if (activeEditor === undefined) return; 
+    const client = languageClients.get("janet-lsp");
 
-    const uri = activeEditor.document.uri.toString();
+    if (client) {
+        const result = await client?.sendRequest("janet/tellJoke", {});
+        void vscode.window.showInformationMessage(
+            "Question: " + result["question"] + "\r\n\r\n" +
+            "Answer: " + result["answer"]
+        );
+    } else {
+        console.error("Janet LSP not found");
+    }
+}
 
-    const result = await client?.sendRequest("janet/tellJoke", {});
-    void vscode.window.showInformationMessage(
-        "Question: " + result["question"] + "\r\n\r\n" +
-        "Answer: " + result["answer"]
-    );
+async function commandEnableDebug() : Promise<void> {
+    const client = languageClients.get("janet-lsp");
+    if (client) {
+        const result = await client?.sendRequest("enableDebug", {});
+        void vscode.window.showInformationMessage(
+            result["message"]
+        );
+
+    } else {
+        console.error("Janet LSP not found");
+    }
+}
+
+async function commandDisableDebug() : Promise<void> {
+    const client = languageClients.get("janet-lsp");
+    if (client) {
+        const result = await client?.sendRequest("disableDebug", {});
+        void vscode.window.showInformationMessage(
+            result["message"]
+        );
+    } else {
+        console.error("Janet LSP not found");
+    }
+}
+
+async function setDebugLevel(loglevel: string) : Promise<void> {
+    console.log("setDebugLevel called: Setting log level to: " + loglevel);
+
+    const client = languageClients.get("janet-lsp");
+    
+    if (client) {
+        console.log("Sending to ", client?.name || "none");
+        const result = await client.sendRequest("setLogLevel", {level: loglevel});
+        void vscode.window.showInformationMessage(
+            result["message"]
+        );
+    } else {
+        console.error("Janet LSP not found");
+    }
+}
+
+async function setDebugToFileLevel(loglevel: string) : Promise<void> {
+    console.log("setDebugToFileLevel called: Setting log to file level to: " + loglevel);
+
+    const client = languageClients.get("janet-lsp");
+
+    if (client) {
+        console.log("Sending to ", client?.name || "none");
+        const result = await client.sendRequest("setLogToFileLevel", {level: loglevel});
+        void vscode.window.showInformationMessage(
+            result["message"]
+        );
+    } else {
+        console.error("Janet LSP not found");
+    }
 }
 
 export function deactivate(){

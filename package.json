@@ -3,7 +3,7 @@
 	"displayName": "Janet++",
 	"description": "Expanded Janet language support for Visual Studio Code",
 	"icon": "images/icon_png_minimal_glow.png",
-	"version": "1.1.8",
+	"version": "1.1.9",
 	"author": "Caleb Figgers",
 	"publisher": "CalebFiggers",
 	"repository": {
@@ -17,7 +17,9 @@
 		"Programming Languages",
 		"Formatters"
 	],
-	"activationEvents": [],
+	"activationEvents": [
+		"workspaceContains:**/project.janet"
+	],
 	"main": "./dist/extension.js",
 	"contributes": {
 		"iconThemes": [],
@@ -73,6 +75,11 @@
 						"description": "Activate keybindings.",
 						"default": true,
 						"scope": "window"
+					},
+					"janet.autoStartRepl": {
+					  "type": "boolean",
+					  "default": false,
+					  "markdownDescription": "If true, Janet++ will auto-start and connect Janet REPL when a Janet project is opened."
 					}
 				}
 			},
@@ -143,7 +150,8 @@
 					"janet.lsp.enableLsp": {
 						"type": "boolean",
 						"markdownDescription": "Whether or not to start up an LSP for Janet when activating Janet++. By default, will start up [Janet LSP](https://www.github.com/CFiggers/janet-lsp), which ships with Janet++.",
-						"default": true
+						"default": true,
+						"order": 0
 					},
 					"janet.lsp.dontDiscoverJpmTree": {
 						"type": "boolean",
@@ -177,6 +185,34 @@
 						],
 						"default": "off",
 						"description": "Traces the communication between VS Code and the language server."
+					},
+					"janet.lsp.loggingdetail.console": {
+						"scope": "window",
+						"type": "string",
+						"enum": [
+							"off",
+							"messages",
+							"verbose",
+							"veryverbose"
+						],
+						"default": "messages",
+						"description": "Sets the detail level of debug logs printed to console. Only applies when :debug is enabled on the server."
+					},
+					"janet.lsp.loggingdetail.file": {
+						"scope": "window",
+						"type": "string",
+						"enum": [
+							"off",
+							"messages",
+							"verbose",
+							"veryverbose"
+						],
+						"default": "verbose",
+						"description": "Sets the detail level of debug logs printed to `janetlsp.log` file. Only applies when :debug is enabled on the server."
+					},
+					"janet.lsp.consolePort": {
+						"type": "string",
+						"description": "Start the LSP listening to a custom port for purposes of connecting to the `janet-lsp --console` CLI option."
 					}
 				}
 			}
@@ -216,6 +252,27 @@
 				"category": "Janet LSP",
 				"command": "janet.lsp.tellJoke",
 				"title": "Tell a Joke",
+				"when": "editorLangId == janet",
+				"enablement": "editorLangId == janet"
+			},
+			{
+				"category": "Janet LSP",
+				"command": "janet.lsp.restartLsp",
+				"title": "Restart Janet LSP",
+				"when": "editorLangId == janet",
+				"enablement": "editorLangId == janet"
+			},
+			{
+				"category": "Janet LSP",
+				"command": "janet.lsp.enableDebug",
+				"title": "Enable Debug Logging",
+				"when": "editorLangId == janet",
+				"enablement": "editorLangId == janet"
+			},
+			{
+				"category": "Janet LSP",
+				"command": "janet.lsp.disableDebug",
+				"title": "Disable Debug Logging",
 				"when": "editorLangId == janet",
 				"enablement": "editorLangId == janet"
 			},

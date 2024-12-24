@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import { customREPLCommandSnippet } from './evaluate';
+// import { customREPLCommandSnippet } from './evaluate';
 // import { ReplConnectSequence } from './nrepl/connectSequence';
 // import { PrettyPrintingOptions } from './printer';
 // import { parseEdn } from '../out/cljs-lib/cljs-lib';
-import { getProjectConfig } from './state';
+// import { getProjectConfig } from './state';
 import _ = require('lodash');
 // import { isDefined } from './utilities';
 
@@ -95,81 +95,30 @@ function _trimAliasName(name: string): string {
 //   false
 // );
 
-// watcher.onDidChange((uri: vscode.Uri) => {
-//   void readEdnWorkspaceConfig(uri);
-// });
-
 // TODO find a way to validate the configs
 function getConfig() {
   const configOptions = vscode.workspace.getConfiguration('janet');
   const pareditOptions = vscode.workspace.getConfiguration('janet.paredit');
   const lspOptions = vscode.workspace.getConfiguration('janet.lsp');
 
-  const w =
-    configOptions.inspect<customREPLCommandSnippet[]>('customREPLCommandSnippets')
-      ?.workspaceValue ?? [];
-  const commands = w.concat(
-    (getProjectConfig()?.customREPLCommandSnippets as customREPLCommandSnippet[]) ?? []
-  );
-  const hoverSnippets = (
-    configOptions.inspect<customREPLCommandSnippet[]>('customREPLHoverSnippets')?.workspaceValue ??
-    []
-  ).concat((getProjectConfig()?.customREPLHoverSnippets as customREPLCommandSnippet[]) ?? []);
-
   return {
-    format: configOptions.get('formatOnSave'),
-    evaluate: configOptions.get('evalOnSave'),
-    test: configOptions.get('testOnSave'),
-    showDocstringInParameterHelp: configOptions.get<boolean>('showDocstringInParameterHelp'),
-    jackInEnv: configOptions.get('jackInEnv'),
-    jackInDependencyVersions: configOptions.get<{
-      JackInDependency: string;
-    }>('jackInDependencyVersions'),
-    clojureLspVersion: configOptions.get<string>('clojureLspVersion'),
-    clojureLspPath: configOptions.get<string>('clojureLspPath'),
-    openBrowserWhenFigwheelStarted: configOptions.get<boolean>('openBrowserWhenFigwheelStarted'),
-    customCljsRepl: configOptions.get('customCljsRepl', null),
-    // replConnectSequences: configOptions.get<ReplConnectSequence[]>('replConnectSequences'),
-    myLeinProfiles: configOptions.get<string[]>('myLeinProfiles', []).map(_trimAliasName),
-    myCljAliases: configOptions.get<string[]>('myCljAliases', []).map(_trimAliasName),
-    asyncOutputDestination: configOptions.get<string>('sendAsyncOutputTo'),
-    customREPLCommandSnippets: configOptions.get<customREPLCommandSnippet[]>(
-      'customREPLCommandSnippets',
-      []
-    ),
-    customREPLCommandSnippetsGlobal:
-      configOptions.inspect<customREPLCommandSnippet[]>('customREPLCommandSnippets')?.globalValue ??
-      [],
-    customREPLCommandSnippetsWorkspace: commands,
-    customREPLCommandSnippetsWorkspaceFolder:
-      configOptions.inspect<customREPLCommandSnippet[]>('customREPLCommandSnippets')
-        ?.workspaceFolderValue ?? [],
-    customREPLHoverSnippets: hoverSnippets,
-    // prettyPrintingOptions: configOptions.get<PrettyPrintingOptions>('prettyPrintingOptions'),
-    evaluationSendCodeToOutputWindow: configOptions.get<boolean>(
-      'evaluationSendCodeToOutputWindow'
-    ),
-    enableJSCompletions: configOptions.get<boolean>('enableJSCompletions'),
-    autoOpenREPLWindow: configOptions.get<boolean>('autoOpenREPLWindow'),
-    autoOpenJackInTerminal: configOptions.get('autoOpenJackInTerminal'),
-    referencesCodeLensEnabled: configOptions.get<boolean>('referencesCodeLens.enabled'),
-    hideReplUi: configOptions.get<boolean>('hideReplUi'),
     strictPreventUnmatchedClosingBracket: pareditOptions.get<boolean>(
       'strictPreventUnmatchedClosingBracket'
     ),
-    showCalvaSaysOnStart: configOptions.get<boolean>('showCalvaSaysOnStart'),
-    jackIn: {
-      useDeprecatedAliasFlag: configOptions.get<boolean>('jackIn.useDeprecatedAliasFlag'),
-    },
     projectRootsSearchExclude: configOptions.get<string[]>('projectRootsSearchExclude', []),
     useLiveShare: configOptions.get<boolean>('useLiveShare'),
     definitionProviderPriority: configOptions.get<string[]>('definitionProviderPriority'),
+
+    autoStartREPL: configOptions.get<boolean>('autoStartRepl'),
 
     // Janet LSP
     customJanetLspCommand: lspOptions.get<string>('customJanetLspCommand'),
     dontDiscoverJpmTree: lspOptions.get<boolean>('dontDiscoverJpmTree'),
     enableLsp: lspOptions.get<boolean>('enableLsp'),
-    debugLsp: lspOptions.get<boolean>('debugLsp')
+    debugLsp: lspOptions.get<boolean>('debugLsp'),
+    loggingDetailConsole: lspOptions.get<string>('loggingdetail.console'),
+    loggingDetailFile: lspOptions.get<string>('loggingdetail.file'),
+    lspConsolePort: lspOptions.get<string>('consolePort')
   };
 }
 
