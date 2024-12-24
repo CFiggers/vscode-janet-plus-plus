@@ -102,6 +102,7 @@ function getConfig() {
   const lspOptions = vscode.workspace.getConfiguration('janet.lsp');
 
   return {
+    format: configOptions.get('formatOnSave'),
     strictPreventUnmatchedClosingBracket: pareditOptions.get<boolean>(
       'strictPreventUnmatchedClosingBracket'
     ),
