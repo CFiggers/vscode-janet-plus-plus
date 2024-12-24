@@ -75,6 +75,11 @@
 						"description": "Activate keybindings.",
 						"default": true,
 						"scope": "window"
+					},
+					"janet.autoStartRepl": {
+					  "type": "boolean",
+					  "default": false,
+					  "markdownDescription": "If true, Janet++ will auto-start and connect Janet REPL when a Janet project is opened."
 					}
 				}
 			},

@@ -321,6 +321,10 @@ export function activate(context: vscode.ExtensionContext) {
 			console.error('Failed activating LSP: ' + e.message);
 		}
 	}
+
+	if (config.getConfig().autoStartREPL) {
+		void vscode.commands.executeCommand('janet.startREPL');
+	}
 		
 	console.log('Extension "vscode-janet" is now active!');
 } 
