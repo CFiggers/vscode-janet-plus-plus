@@ -1,5 +1,27 @@
 # Change Log
 
+## v1.1.9 (2024-12-22, Pre-release)
+
+- Extension
+  - New feature: Auto-activate extension when `project.janet` is detected in project tree
+  - New feature: Setting to auto-start REPL on extension activation
+- Settings
+  - New option to enable Debug flag on launch
+  - New options to set LSP Log level and Log to File Level (on launch and on change)
+  - New option to set Console port on launch
+- Janet LSP
+  - Update to v0.0.10 
+    - Logging 
+      - Rotate log files and overwrite eventually to avoid indefinite log file size
+      - Adjusted some log levels
+    - New methods
+      - `enableDebug` and `disableDebug` - Allow clients to set `(dyn :debug)` while running
+      - `setLogLevel` and `setLogToFileLevel` - Allow clients to change debug level to console and file
+  - Related commands 
+    - New commands to Enable and Disable Debug
+    - New commands to set Log Level and Log to File Level
+    - New command to Restart LSP
+
 ## v1.1.8 (2024-12-20)
 
 - Changes in v1.1.7 promoted to full release
