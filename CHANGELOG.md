@@ -1,5 +1,10 @@
 # Change Log
 
+## v1.1.10 (2025-09-04)
+
+- Project
+  - Version bump to v1.1.10; changes introduced in v1.1.9 promoted to full release
+
 ## v1.1.9 (2024-12-22, Pre-release)
 
 - Extension
