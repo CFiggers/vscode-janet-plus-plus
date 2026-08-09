@@ -1,5 +1,26 @@
 # Change Log
 
+## v1.1.11 (2026-08-09)
+
+- Syntax Highlighting
+  - Updates for Janet 1.41.2
+- Janet LSP
+  - Update to v0.0.11 
+    - Flychecking 
+      - Safe `ffi/*` forms now evaluate during flychecking 
+    - Startup.janet 
+      - Now pass `(curenv)` to `(dofile)` when evaluating startup.janet 
+        - Makes introspecting the LSP's runtime environment table much more straightforward
+      - Now export all janet-lsp submodules from `main.janet` so that `startup.janet` can directly invoke functions from modules like `eval`
+        - Created `eval/update-safe-forms` to enable declaring forms safe for flychecking *without* `:flycheck` metadata
+    - Module loading 
+      - Now handle jpm_tree libs by adding `jpm_tree/lib` to syspaths when present
+      - Bugfix 
+        - Was only seeking for "\*.so" files when identifying and handling module files; now search also for "\*.dll" and "\*.dylib" as well
+    - Project 
+      - Added lockfile.jdn to support reproducible build systems 
+      - Reorganized tests
+
 ## v1.1.10 (2025-09-04)
 
 - Project
